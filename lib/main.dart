@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatefulWidget{
+class MyApp extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return _MyAppState();
   }
 }
 
-class _MyAppState extends State<MyApp>{
+class _MyAppState extends State<MyApp> {
+  List<String> _products = ['Food Tester'];
+
   build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -27,13 +29,17 @@ class _MyAppState extends State<MyApp>{
                 child: Text('Add Products'),
               ),
             ),
-            Card(
-              child: Column(
-                children: <Widget>[
-                  Image.asset('assets/food.jpg'),
-                  Text('Food Paradise'),
-                ],
-              ),
+            Column(
+              children: _products
+                  .map((element) => Card(
+                        child: Column(
+                          children: <Widget>[
+                            Image.asset('assets/food.jpg'),
+                            Text(element),
+                          ],
+                        ),
+                      ))
+                  .toList(),
             ),
           ],
         ),
@@ -41,7 +47,3 @@ class _MyAppState extends State<MyApp>{
     );
   }
 }
-
-
-
-   
