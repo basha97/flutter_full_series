@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
           title: Text('title'),
           backgroundColor: Colors.greenAccent,
         ),
-        body: Productmanager(),
+        body: Productmanager('Food Tester'),
       ),
     );
   }
