@@ -47,7 +47,9 @@ class _ProductmanagerState extends State<Productmanager> {
           margin: EdgeInsets.all(10.0),
           child: ProductControl(_addProduct),
         ),
-        Products(_products),
+        Expanded(
+          child: Products(_products),
+        )
       ],
     );
   }
