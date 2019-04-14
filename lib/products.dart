@@ -22,9 +22,11 @@ class Products extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print('[Products Widget] build()');
-    return ListView.builder(
+    return products.length > 0 ? ListView.builder(
       itemBuilder: _productItem,
       itemCount: products.length,
+    ): Center(
+      child: Text('No products found'),
     );
   }
 }
