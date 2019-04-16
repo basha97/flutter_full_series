@@ -9,7 +9,7 @@ class ProductPage extends StatelessWidget{
           backgroundColor: Colors.greenAccent,
         ),
         body: Center(
-          child: Text('On the products page'),
+          child: Text('On the products page '),
         ),
       );
   }
