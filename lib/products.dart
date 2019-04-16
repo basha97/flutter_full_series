@@ -13,6 +13,15 @@ class Products extends StatelessWidget {
         children: <Widget>[
           Image.asset('assets/food.jpg'),
           Text(products[index]),
+          ButtonBar(
+            alignment: MainAxisAlignment.center,
+            children: <Widget>[
+              FlatButton(
+                child: Text('Details '),
+                onPressed: () => {},
+              )
+            ],
+          )
         ],
       ),
     );
@@ -27,9 +36,7 @@ class Products extends StatelessWidget {
         itemCount: products.length,
       );
     } else {
-      productCard = Center(
-        child: Text('No data founds'),
-      );
+      productCard = Container();
     }
 
     return productCard;
