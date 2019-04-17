@@ -57,6 +57,13 @@ class _MyAppState extends State<MyApp>{
                             _products[index]['image']));
         }
       },
+      onUnknownRoute: (RouteSettings settings){
+        return MaterialPageRoute(
+          builder: (BuildContext context) =>
+            ProductsPage(_addProduct, _deleteProduct, _products)
+          
+        );
+      },
     );
   }
 }
