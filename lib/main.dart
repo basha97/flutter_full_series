@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_full_series/product_manager.dart';
+import 'package:flutter_full_series/pages/home.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,13 +13,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.deepOrange,
         accentColor: Colors.deepPurple
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('title'),
-          backgroundColor: Colors.greenAccent,
-        ),
-        body: Productmanager(),
-      ),
+      home: HomePage(),
     );
   }
 }
