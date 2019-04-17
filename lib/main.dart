@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_full_series/pages/product.dart';
 import 'package:flutter_full_series/pages/products.dart';
 import 'package:flutter_full_series/pages/products_admin.dart';
-import './pages/auth.dart';
 
 void main() => runApp(MyApp());
 
