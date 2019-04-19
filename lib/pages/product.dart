@@ -5,34 +5,11 @@ import 'package:flutter/material.dart';
 class ProductPage extends StatelessWidget {
   final String title;
   final String imageUrl;
+  final String description;
+  final double price;
+     
 
-  _showWarningDialog(BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Are you sure?'),
-            content: Text('This action cannot be undone'),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('DISCARD'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              FlatButton(
-                child: Text('CONTINUE'),
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context, true);
-                },
-              )
-            ],
-          );
-        });
-  }
-
-  ProductPage(this.title, this.imageUrl);
+  ProductPage(this.title, this.imageUrl,this.price,this.description);
 
   @override
   Widget build(BuildContext context) {
@@ -52,16 +29,35 @@ class ProductPage extends StatelessWidget {
             Image.asset(imageUrl),
             Container(
               padding: EdgeInsets.all(10.0),
-              child: Text(title),
+              child: Text(title,style: TextStyle(
+                fontSize: 26.0,
+                fontWeight: FontWeight.bold
+              ),),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text('Chennai,Tamilnadu',
+                style: TextStyle(color: Colors.grey),),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                  child: Text(
+                    '|',
+                    style: TextStyle(
+                      color: Colors.grey
+                    ),
+                  ),
+                ),
+                Text('\$' + price.toString(),
+                style: TextStyle(fontSize: 15.0),)
+              ],
             ),
             Container(
-              padding: EdgeInsets.all(10.0),
-              child: RaisedButton(
-                color: Theme.of(context).accentColor,
-                child: Text('DELETE'),
-                onPressed: () =>  _showWarningDialog(context),
-              ),
-            )
+              margin: EdgeInsets.only(top: 10.0),
+              child: Text(
+                description,
+                textAlign: TextAlign.center,
+                ))
           ],
         ),
       ),
