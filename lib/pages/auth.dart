@@ -21,55 +21,60 @@ class _AuthPageState extends State<AuthPage> {
       body: Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.5), 
-              BlendMode.dstATop),
-              image: AssetImage('assets/bg.jpg')
-              )),
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(
+                    Colors.black.withOpacity(0.5), BlendMode.dstATop),
+                image: AssetImage('assets/bg.jpg'))),
         padding: EdgeInsets.all(10.0),
-        child: ListView(
-          children: <Widget>[
-            TextField(
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                labelText: 'Email',
-              ),
-              onChanged: (String value) {
-                setState(() {
-                  _emailvalue = value;
-                });
-              },
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                TextField(
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    filled: true
+                  ),
+                  onChanged: (String value) {
+                    setState(() {
+                      _emailvalue = value;
+                    });
+                  },
+                ),
+                SizedBox(height: 10.0,),
+                TextField(
+                  obscureText: true,
+                  decoration: InputDecoration(labelText: 'Password',filled: true),
+                  onChanged: (String value) {
+                    setState(() {
+                      _passwordvalue = value;
+                    });
+                  },
+                ),
+                SwitchListTile(
+                  value: _acceptterms,
+                  onChanged: (bool value) {
+                    setState(() {
+                      _acceptterms = value;
+                    });
+                  },
+                  title: Text('Accept Terms'),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                RaisedButton(
+                  color: Theme.of(context).primaryColor,
+                  textColor: Colors.white,
+                  child: Text('LOGIN'),
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, '/products');
+                  },
+                )
+              ],
             ),
-            TextField(
-              obscureText: true,
-              decoration: InputDecoration(labelText: 'Password'),
-              onChanged: (String value) {
-                setState(() {
-                  _passwordvalue = value;
-                });
-              },
-            ),
-            SwitchListTile(
-              value: _acceptterms,
-              onChanged: (bool value) {
-                setState(() {
-                  _acceptterms = value;
-                });
-              },
-              title: Text('Accept Terms'),
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            RaisedButton(
-              color: Theme.of(context).primaryColor,
-              textColor: Colors.white,
-              child: Text('LOGIN'),
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/products');
-              },
-            )
-          ],
+          ),
         ),
       ),
     );
