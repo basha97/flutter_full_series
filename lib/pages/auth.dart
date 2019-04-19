@@ -7,7 +7,7 @@ class AuthPage extends StatefulWidget {
   }
 }
 
-class _AuthPageState extends State<AuthPage>{
+class _AuthPageState extends State<AuthPage> {
   String _emailvalue;
   String _passwordvalue;
   bool _acceptterms = false;
@@ -19,7 +19,14 @@ class _AuthPageState extends State<AuthPage>{
         title: Text('Login'),
       ),
       body: Container(
-        margin: EdgeInsets.all(10.0),
+        decoration: BoxDecoration(
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.5), 
+              BlendMode.dstATop),
+              image: AssetImage('assets/bg.jpg')
+              )),
+        padding: EdgeInsets.all(10.0),
         child: ListView(
           children: <Widget>[
             TextField(
@@ -27,7 +34,7 @@ class _AuthPageState extends State<AuthPage>{
               decoration: InputDecoration(
                 labelText: 'Email',
               ),
-              onChanged: (String value){
+              onChanged: (String value) {
                 setState(() {
                   _emailvalue = value;
                 });
@@ -35,24 +42,22 @@ class _AuthPageState extends State<AuthPage>{
             ),
             TextField(
               obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Password'
-              ),
-              onChanged: (String value){
+              decoration: InputDecoration(labelText: 'Password'),
+              onChanged: (String value) {
                 setState(() {
                   _passwordvalue = value;
                 });
               },
             ),
             SwitchListTile(
-            value: _acceptterms,
-            onChanged: (bool value){
-              setState(() {
-                _acceptterms = value;
-              });
-            },
-            title: Text('Accept Terms'),
-          ),
+              value: _acceptterms,
+              onChanged: (bool value) {
+                setState(() {
+                  _acceptterms = value;
+                });
+              },
+              title: Text('Accept Terms'),
+            ),
             SizedBox(
               height: 10.0,
             ),
