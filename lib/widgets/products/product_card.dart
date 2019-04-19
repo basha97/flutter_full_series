@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 
 import './price_tag.dart';
 
+import '../ui_elements/title_default.dart';
+
+import './address_tag.dart';
+
+
 class ProductCard extends StatelessWidget{
   final Map<String , dynamic> product;
   final int productindex;
@@ -19,10 +24,7 @@ class ProductCard extends StatelessWidget{
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  product['title'],
-                  style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
-                ),
+                TitleDefault(product['title']),
                 SizedBox(
                   width: 8.0,
                 ),
@@ -30,19 +32,7 @@ class ProductCard extends StatelessWidget{
               ],
             ),
           ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.5),
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey, width: 2.0),
-                  borderRadius: BorderRadius.circular(5.0)),
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.5),
-                child: Text('Chennai,Tamilnadu'),
-              ),
-            ),
-          ),
+          AddressTag('Chennai,Tamilnadu'),
           ButtonBar(
             alignment: MainAxisAlignment.center,
             children: <Widget>[
