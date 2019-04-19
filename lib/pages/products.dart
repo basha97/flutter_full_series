@@ -28,6 +28,12 @@ class ProductsPage extends StatelessWidget {
       ),
       appBar: AppBar(
         title: Text('EasyList'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.favorite_border),
+            onPressed: (){},
+          )
+        ],
       ),
       body: Productmanager(products),
     );

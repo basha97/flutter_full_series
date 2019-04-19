@@ -35,33 +35,37 @@ class Products extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
-                
               ],
             ),
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 6.0,vertical: 2.5),
+            padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.5),
             child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                        width: 2.0
-                      ),
-                      borderRadius: BorderRadius.circular(5.0)
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6.0,vertical: 2.5),
-                      child: Text('Chennai,Tamilnadu'),
-                    ),
-                  ),
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey, width: 2.0),
+                  borderRadius: BorderRadius.circular(5.0)),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.5),
+                child: Text('Chennai,Tamilnadu'),
+              ),
+            ),
           ),
           ButtonBar(
             alignment: MainAxisAlignment.center,
             children: <Widget>[
-              FlatButton(
-                  child: Text('Details '),
+              IconButton(
+                  icon: Icon(Icons.info),
+                  color: Theme.of(context).primaryColor,
                   onPressed: () => Navigator.pushNamed<bool>(
-                      context, '/product/' + index.toString())),
+                      context, '/product/' + index.toString())
+                      ),
+              IconButton(
+                  icon: Icon(Icons.favorite_border),
+                  color: Colors.red,
+                  onPressed: () => Navigator.pushNamed<bool>(
+                      context, '/product/' + index.toString())
+                      ),
             ],
           )
         ],
