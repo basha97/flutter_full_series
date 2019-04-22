@@ -19,6 +19,12 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
   Widget _buildTitleTextField() {
     return TextFormField(
       decoration: InputDecoration(labelText: 'Product Title'),
+      autovalidate: true,
+      validator: (String value){
+        if(value.isEmpty){
+          return 'This field is required';
+        }
+      },
       onSaved: (String value){
         setState(() {
           _titlevalue = value;
@@ -30,6 +36,12 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
   Widget _buildDescriptionTextField() {
     return TextFormField(
       decoration: InputDecoration(labelText: 'Product Description'),
+      autovalidate: true,
+      validator: (String value){
+        if(value.isEmpty){
+          return 'This field is required';
+        }
+      },
       maxLines: 4,
       onSaved: (String value){
         setState(() {
@@ -43,6 +55,12 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
   Widget _buildPriceTextField() {
     return TextFormField(
       decoration: InputDecoration(labelText: 'Product Price'),
+      autovalidate: true,
+      validator: (String value){
+        if(value.isEmpty){
+          return 'This field is required';
+        }
+      },
       keyboardType: TextInputType.number,
       onSaved: (String value){
         setState(() {
@@ -54,6 +72,7 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
   }
 
   void _submitForm() {
+    _formkey.currentState.validate();
     _formkey.currentState.save();
     final Map<String, dynamic> product = {
       'title': _titlevalue,
@@ -75,7 +94,7 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
       child: Form(
         key: _formkey,
               child: ListView(
-          padding: EdgeInsets.symmetric(horizontal: targetPadding/2),
+          // padding: EdgeInsets.symmetric(horizontal: targetPadding/2),
           children: <Widget>[
             _buildTitleTextField(),
             _buildDescriptionTextField(),
