@@ -21,8 +21,8 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
       decoration: InputDecoration(labelText: 'Product Title'),
       autovalidate: true,
       validator: (String value){
-        if(value.isEmpty){
-          return 'This field is required';
+        if(value.isEmpty && value.length < 5){
+          return 'This field is required and should be more than five character';
         }
       },
       onSaved: (String value){
