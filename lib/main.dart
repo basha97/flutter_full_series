@@ -35,7 +35,8 @@ class _MyAppState extends State<MyApp>{
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.deepOrange,
-        accentColor: Colors.deepPurple
+        accentColor: Colors.deepPurple,
+        buttonColor: Colors.redAccent
       ),
       // home: AuthPage(),
       routes: {
