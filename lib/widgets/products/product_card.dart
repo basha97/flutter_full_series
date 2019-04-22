@@ -13,13 +13,8 @@ class ProductCard extends StatelessWidget{
 
   ProductCard(this.product,this.productindex);
 
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        children: <Widget>[
-          Image.asset(product['image']),
-          Container(
+  Widget _buildPricerow(){
+    return Container(
             padding: EdgeInsets.all(10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -31,9 +26,11 @@ class ProductCard extends StatelessWidget{
                 PriceTag(product['price'].toString())
               ],
             ),
-          ),
-          AddressTag('Chennai,Tamilnadu'),
-          ButtonBar(
+          );
+  }
+
+  Widget _buildActionButtons(BuildContext context){
+    return ButtonBar(
             alignment: MainAxisAlignment.center,
             children: <Widget>[
               IconButton(
@@ -49,7 +46,18 @@ class ProductCard extends StatelessWidget{
                       context, '/product/' + productindex.toString())
                       ),
             ],
-          )
+          );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Column(
+        children: <Widget>[
+          Image.asset(product['image']),
+          _buildPricerow(),
+          AddressTag('Chennai,Tamilnadu'),
+          _buildActionButtons(context)
         ],
       ),
     );

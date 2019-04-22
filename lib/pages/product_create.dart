@@ -15,50 +15,50 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
   String _descriptionvalue;
   double _pricevalue;
 
-  Widget _buildTitleTextField(){
+  Widget _buildTitleTextField() {
     return TextField(
-            decoration: InputDecoration(labelText: 'Product Title'),
-            onChanged: (String value) {
-              setState(() {
-                _titlevalue = value;
-              });
-            },
-          );
+      decoration: InputDecoration(labelText: 'Product Title'),
+      onChanged: (String value) {
+        setState(() {
+          _titlevalue = value;
+        });
+      },
+    );
   }
 
-  Widget _buildDescriptionTextField(){
+  Widget _buildDescriptionTextField() {
     return TextField(
-            decoration: InputDecoration(labelText: 'Product Description'),
-            maxLines: 4,
-            onChanged: (String value) {
-              setState(() {
-                _descriptionvalue = value;
-              });
-            },
-          );
+      decoration: InputDecoration(labelText: 'Product Description'),
+      maxLines: 4,
+      onChanged: (String value) {
+        setState(() {
+          _descriptionvalue = value;
+        });
+      },
+    );
   }
 
-  Widget _buildPriceTextField(){
+  Widget _buildPriceTextField() {
     return TextField(
-            decoration: InputDecoration(labelText: 'Product Price'),
-            keyboardType: TextInputType.number,
-            onChanged: (String value) {
-              setState(() {
-                _pricevalue = double.parse(value);
-              });
-            },
-          );
+      decoration: InputDecoration(labelText: 'Product Price'),
+      keyboardType: TextInputType.number,
+      onChanged: (String value) {
+        setState(() {
+          _pricevalue = double.parse(value);
+        });
+      },
+    );
   }
 
-  void _submitForm(){
-    final Map<String , dynamic> product = {
-                'title' : _titlevalue,
-                'description' : _descriptionvalue,
-                'price' : _pricevalue,
-                'image' : 'assets/food.jpg'
-              };
-              widget.addProduct(product);
-              Navigator.pushReplacementNamed(context, '/products');
+  void _submitForm() {
+    final Map<String, dynamic> product = {
+      'title': _titlevalue,
+      'description': _descriptionvalue,
+      'price': _pricevalue,
+      'image': 'assets/food.jpg'
+    };
+    widget.addProduct(product);
+    Navigator.pushReplacementNamed(context, '/products');
   }
 
   @override

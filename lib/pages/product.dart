@@ -9,6 +9,27 @@ class ProductPage extends StatelessWidget {
   final String imageUrl;
   final String description;
   final double price;
+
+  Widget _buildAddressPriceRow(){
+    return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text('Chennai,Tamilnadu',
+                style: TextStyle(color: Colors.grey),),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                  child: Text(
+                    '|',
+                    style: TextStyle(
+                      color: Colors.grey
+                    ),
+                  ),
+                ),
+                Text('\$' + price.toString(),
+                style: TextStyle(fontSize: 15.0),)
+              ],
+            );
+  }
      
 
   ProductPage(this.title, this.imageUrl,this.price,this.description);
@@ -33,24 +54,7 @@ class ProductPage extends StatelessWidget {
               padding: EdgeInsets.all(10.0),
               child: TitleDefault(title),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text('Chennai,Tamilnadu',
-                style: TextStyle(color: Colors.grey),),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 5.0),
-                  child: Text(
-                    '|',
-                    style: TextStyle(
-                      color: Colors.grey
-                    ),
-                  ),
-                ),
-                Text('\$' + price.toString(),
-                style: TextStyle(fontSize: 15.0),)
-              ],
-            ),
+            _buildAddressPriceRow(),
             Container(
               margin: EdgeInsets.only(top: 10.0),
               child: Text(
