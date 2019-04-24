@@ -22,6 +22,12 @@ class _MyAppState extends State<MyApp>{
     });
   }
 
+  void _updateProduct(int index,Map<String ,dynamic> product){
+    setState(() {
+     _products[index] = product;
+    });
+  }
+
   void _deleteProduct(int index){
     setState(() {
      _products.removeAt(index); 
@@ -45,7 +51,7 @@ class _MyAppState extends State<MyApp>{
         '/products': (BuildContext context) =>
                             ProductsPage(_products),
         '/admin': (BuildContext context) =>
-                            ProductsAdminPage(_deleteProduct,_addProduct,_products),
+                            ProductsAdminPage(_deleteProduct,_updateProduct,_addProduct,_products),
       },
       onGenerateRoute: (RouteSettings setting){
         final List<String> pathElements = setting.name.split('/');
