@@ -3,6 +3,7 @@ import 'package:flutter_full_series/pages/auth.dart';
 import 'package:flutter_full_series/pages/product.dart';
 import 'package:flutter_full_series/pages/products.dart';
 import 'package:flutter_full_series/pages/products_admin.dart';
+import './models/product.dart';
 
 void main() => runApp(MyApp());
 
@@ -14,15 +15,15 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp>{
-  List<Map<String, dynamic>> _products = [];
+  List<Product> _products = [];
 
-  void _addProduct(Map<String , dynamic> product){
+  void _addProduct(Product product){
     setState(() {
       _products.add(product); 
     });
   }
 
-  void _updateProduct(int index,Map<String ,dynamic> product){
+  void _updateProduct(int index,Product product){
     setState(() {
      _products[index] = product;
     });
@@ -62,10 +63,10 @@ class _MyAppState extends State<MyApp>{
           final int index = int.parse(pathElements[2]);
           return MaterialPageRoute<bool>(
                         builder: (BuildContext context) => ProductPage(
-                            _products[index]['title'],
-                            _products[index]['image'],
-                            _products[index]['price'],
-                            _products[index]['description'],));
+                            _products[index].title,
+                            _products[index].image,
+                            _products[index].price,
+                            _products[index].description,));
         }
       },
       onUnknownRoute: (RouteSettings settings){
