@@ -2,29 +2,25 @@ import 'package:flutter/material.dart';
 
 import '../widgets/products/products.dart';
 
-import '../models/product.dart';
 class ProductsPage extends StatelessWidget {
-  final List<Product> products;
-  ProductsPage(this.products);
-
-  Widget _drawer(BuildContext context){
+  Widget _drawer(BuildContext context) {
     return Drawer(
-        child: Column(
-          children: <Widget>[
-            AppBar(
-              automaticallyImplyLeading: false,
-              title: Text('Choose'),
-            ),
-            ListTile(
-              leading: Icon(Icons.edit),
-              title: Text('Manage Products'),
-              onTap: () {
-                Navigator.pushReplacementNamed(context, '/admin');
-              },
-            )
-          ],
-        ),
-      );
+      child: Column(
+        children: <Widget>[
+          AppBar(
+            automaticallyImplyLeading: false,
+            title: Text('Choose'),
+          ),
+          ListTile(
+            leading: Icon(Icons.edit),
+            title: Text('Manage Products'),
+            onTap: () {
+              Navigator.pushReplacementNamed(context, '/admin');
+            },
+          )
+        ],
+      ),
+    );
   }
 
   @override
@@ -36,11 +32,11 @@ class ProductsPage extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.favorite_border),
-            onPressed: (){},
+            onPressed: () {},
           )
         ],
       ),
-      body: Products(products),
+      body: Products(),
     );
   }
 }
