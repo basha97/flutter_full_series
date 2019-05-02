@@ -12,8 +12,6 @@ import 'package:scoped_model/scoped_model.dart';
 
 import '../../scoped-models/products.dart';
 
-
-
 class ProductCard extends StatelessWidget {
   final Product product;
   final int productindex;
@@ -45,15 +43,19 @@ class ProductCard extends StatelessWidget {
             color: Theme.of(context).primaryColor,
             onPressed: () => Navigator.pushNamed<bool>(
                 context, '/product/' + productindex.toString())),
-        ScopedModelDescendant<ProductsModel>(builder: (BuildContext context,Widget child,ProductsModel model ){
-          return IconButton(
-            icon: Icon(model.products[productindex].isFavourite ? Icons.favorite : Icons.favorite_border),
-            color: Colors.red,
-            onPressed: () {
-              model.selectProduct(productindex);
-              model.toggleProductFavoriteStatus();
-            });
-        },),
+        ScopedModelDescendant<ProductsModel>(
+          builder: (BuildContext context, Widget child, ProductsModel model) {
+            return IconButton(
+                icon: Icon(model.products[productindex].isFavourite
+                    ? Icons.favorite
+                    : Icons.favorite_border),
+                color: Colors.red,
+                onPressed: () {
+                  model.selectProduct(productindex);
+                  model.toggleProductFavoriteStatus();
+                });
+          },
+        ),
       ],
     );
   }
