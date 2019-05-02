@@ -8,6 +8,12 @@ import './address_tag.dart';
 
 import '../../models/product.dart';
 
+import 'package:scoped_model/scoped_model.dart';
+
+import '../../scoped-models/products.dart';
+
+
+
 class ProductCard extends StatelessWidget {
   final Product product;
   final int productindex;
@@ -39,11 +45,15 @@ class ProductCard extends StatelessWidget {
             color: Theme.of(context).primaryColor,
             onPressed: () => Navigator.pushNamed<bool>(
                 context, '/product/' + productindex.toString())),
-        IconButton(
-            icon: Icon(Icons.favorite_border),
+        ScopedModelDescendant<ProductsModel>(builder: (BuildContext context,Widget child,ProductsModel model ){
+          return IconButton(
+            icon: Icon(model.products[productindex].isFavourite ? Icons.favorite : Icons.favorite_border),
             color: Colors.red,
-            onPressed: () => Navigator.pushNamed<bool>(
-                context, '/product/' + productindex.toString())),
+            onPressed: () {
+              model.selectProduct(productindex);
+              model.toggleProductFavoriteStatus();
+            });
+        },),
       ],
     );
   }
