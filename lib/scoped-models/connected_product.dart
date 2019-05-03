@@ -15,17 +15,23 @@ mixin ConnectedProductsModel on Model {
 
   void addProduct(
       String title, String description, String image, double price) {
-      final Map<String, dynamic> productData = {
-        'title' : title,
-        'description' : description,
-        'image' : 'https://www.klondikebar.com/wp-content/uploads/sites/49/2015/09/double-chocolate-ice-cream-bar.png',
-        'price' : price
-
-      };
-      http.post('https://flutterseries.firebaseio.com/products.json', body: json.encode(productData));
+    final Map<String, dynamic> productData = {
+      'title': title,
+      'description': description,
+      'image':
+          'https://www.klondikebar.com/wp-content/uploads/sites/49/2015/09/double-chocolate-ice-cream-bar.png',
+      'price': price
+    };
+    http
+        .post('https://flutterseries.firebaseio.com/products.json',
+            body: json.encode(productData))
+        .then((http.Response response) {
+          final Map<String , dynamic> responseData = json.decode(response.body);
+          
       final Product newProduct = Product(
+          id: responseData['name'],
           title: title,
-          description: description,
+          description: description, 
           image: image,
           price: price,
           userEmail: _authenticatedUser.email,
@@ -33,6 +39,7 @@ mixin ConnectedProductsModel on Model {
       _products.add(newProduct);
       _selProductIndex = null;
       notifyListeners();
+    });
   }
 }
 
