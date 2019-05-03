@@ -4,6 +4,10 @@ import '../models/product.dart';
 
 import '../models/user.dart';
 
+import 'package:http/http.dart' as http;
+
+import 'dart:convert';
+
 mixin ConnectedProductsModel on Model {
   List<Product> _products = [];
   User _authenticatedUser;
@@ -11,16 +15,24 @@ mixin ConnectedProductsModel on Model {
 
   void addProduct(
       String title, String description, String image, double price) {
-    final Product newProduct = Product(
-        title: title,
-        description: description,
-        image: image,
-        price: price,
-        userEmail: _authenticatedUser.email,
-        userId: _authenticatedUser.id);
-    _products.add(newProduct);
-    _selProductIndex = null;
-    notifyListeners();
+      final Map<String, dynamic> productData = {
+        'title' : title,
+        'description' : description,
+        'image' : 'https://www.klondikebar.com/wp-content/uploads/sites/49/2015/09/double-chocolate-ice-cream-bar.png',
+        'price' : price
+
+      };
+      http.post('https://flutterseries.firebaseio.com/products.json', body: json.encode(productData));
+      final Product newProduct = Product(
+          title: title,
+          description: description,
+          image: image,
+          price: price,
+          userEmail: _authenticatedUser.email,
+          userId: _authenticatedUser.id);
+      _products.add(newProduct);
+      _selProductIndex = null;
+      notifyListeners();
   }
 }
 
@@ -88,6 +100,9 @@ mixin ProductsModel on ConnectedProductsModel {
 
   void selectProduct(int index) {
     _selProductIndex = index;
+    if (index != null) {
+      notifyListeners();
+    }
   }
 
   bool get displayFavorite {

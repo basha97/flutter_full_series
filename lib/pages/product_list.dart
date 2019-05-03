@@ -20,7 +20,9 @@ class ProductListPage extends StatelessWidget {
                 return ProductEditPage();
               },
             ),
-          );
+          ).then((_) =>{
+            model.selectProduct(null)
+          });
         },
       );
    
