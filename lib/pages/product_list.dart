@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import './product_edit.dart';
 
-
 import 'package:scoped_model/scoped_model.dart';
 
-import '../scoped-models/products.dart';
+import '../scoped-models/connected_product.dart';
+
 
 class ProductListPage extends StatelessWidget {
   Widget _buildEditButton(BuildContext context, int index , ProductsModel model) {
