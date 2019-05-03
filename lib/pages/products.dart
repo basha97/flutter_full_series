@@ -6,7 +6,23 @@ import 'package:scoped_model/scoped_model.dart';
 
 import '../scoped-models/main.dart';
 
-class ProductsPage extends StatelessWidget {
+class ProductsPage extends StatefulWidget {
+  final MainModel model;
+
+  ProductsPage(this.model);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _ProductspageState();
+  }
+}
+
+class _ProductspageState extends State<ProductsPage>{
+  @override
+  void initState() { 
+    super.initState();
+    widget.model.fetchProducts();
+  }
   Widget _drawer(BuildContext context) {
     return Drawer(
       child: Column(
@@ -34,14 +50,18 @@ class ProductsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('EasyList'),
         actions: <Widget>[
-          ScopedModelDescendant<MainModel>(builder: (BuildContext context,Widget child,MainModel model){
-            return IconButton(
-            icon: Icon(model.displayFavorite ? Icons.favorite  : Icons.favorite_border),
-            onPressed: () {
-              model.toggleDisplayMode();
+          ScopedModelDescendant<MainModel>(
+            builder: (BuildContext context, Widget child, MainModel model) {
+              return IconButton(
+                icon: Icon(model.displayFavorite
+                    ? Icons.favorite
+                    : Icons.favorite_border),
+                onPressed: () {
+                  model.toggleDisplayMode();
+                },
+              );
             },
-          );
-          },)
+          )
         ],
       ),
       body: Products(),
