@@ -1,26 +1,22 @@
 import 'package:flutter/material.dart';
 
-import './price_tag.dart';
-
-import '../ui_elements/title_default.dart';
-
-import './address_tag.dart';
-
-import '../../models/product.dart';
-
 import 'package:scoped_model/scoped_model.dart';
 
+import './price_tag.dart';
+import './address_tag.dart';
+import '../ui_elements/title_default.dart';
+import '../../models/product.dart';
 import '../../scoped-models/main.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
-  final int productindex;
+  final int productIndex;
 
-  ProductCard(this.product, this.productindex);
+  ProductCard(this.product, this.productIndex);
 
-  Widget _buildPricerow() {
+  Widget _buildTitlePriceRow() {
     return Container(
-      padding: EdgeInsets.all(10.0),
+      padding: EdgeInsets.only(top: 10.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -39,21 +35,23 @@ class ProductCard extends StatelessWidget {
       alignment: MainAxisAlignment.center,
       children: <Widget>[
         IconButton(
-            icon: Icon(Icons.info),
-            color: Theme.of(context).primaryColor,
-            onPressed: () => Navigator.pushNamed<bool>(
-                context, '/product/' + productindex.toString())),
+          icon: Icon(Icons.info),
+          color: Theme.of(context).accentColor,
+          onPressed: () => Navigator.pushNamed<bool>(
+              context, '/product/' + productIndex.toString()),
+        ),
         ScopedModelDescendant<MainModel>(
           builder: (BuildContext context, Widget child, MainModel model) {
             return IconButton(
-                icon: Icon(model.allProducts[productindex].isFavourite
-                    ? Icons.favorite
-                    : Icons.favorite_border),
-                color: Colors.red,
-                onPressed: () {
-                  model.selectProduct(productindex);
-                  model.toggleProductFavoriteStatus();
-                });
+              icon: Icon(model.allProducts[productIndex].isFavourite
+                  ? Icons.favorite
+                  : Icons.favorite_border),
+              color: Colors.red,
+              onPressed: () {
+                model.selectProduct(productIndex);
+                model.toggleProductFavoriteStatus();
+              },
+            );
           },
         ),
       ],
@@ -65,13 +63,15 @@ class ProductCard extends StatelessWidget {
     return Card(
       child: Column(
         children: <Widget>[
-          Image.asset(product.image),
-          _buildPricerow(),
-          AddressTag('Chennai,Tamilnadu'),
-          Text(product.userEmail),
+          // Image.network(product.image),
+          //  Image.network('https://www.klondikebar.com/wp-content/uploads/sites/49/2015/09/double-chocolate-ice-cream-bar.png'),
+          _buildTitlePriceRow(),
+          AddressTag('Union Square, San Francisco'),
+          //  Text(product.userEmail),
           _buildActionButtons(context)
         ],
       ),
     );
+    
   }
 }

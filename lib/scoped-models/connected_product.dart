@@ -20,18 +20,20 @@ mixin ConnectedProductsModel on Model {
       'description': description,
       'image':
           'https://www.klondikebar.com/wp-content/uploads/sites/49/2015/09/double-chocolate-ice-cream-bar.png',
-      'price': price
+      'price': price,
+      'userEmail': _authenticatedUser.email,
+      'userId': _authenticatedUser.id
     };
     http
         .post('https://flutterseries.firebaseio.com/products.json',
             body: json.encode(productData))
         .then((http.Response response) {
-          final Map<String , dynamic> responseData = json.decode(response.body);
-          
+      final Map<String, dynamic> responseData = json.decode(response.body);
+
       final Product newProduct = Product(
           id: responseData['name'],
           title: title,
-          description: description, 
+          description: description,
           image: image,
           price: price,
           userEmail: _authenticatedUser.email,
@@ -88,11 +90,30 @@ mixin ProductsModel on ConnectedProductsModel {
     notifyListeners();
   }
 
-  void fetchProducts(){
-    http.get('https://flutterseries.firebaseio.com/products.json')
-      .then((http.Response response){
-        print(json.decode(response.body));
+  void fetchProducts() {
+    http
+        .get('https://flutterseries.firebaseio.com/products.json')
+        .then((http.Response response) {
+      final List<Product> fetchedProductList = [];
+      final Map<String,  dynamic> productListData =
+          json.decode(response.body);
+          print(productListData);
+      productListData
+          .forEach((String productId,dynamic productData) {
+        final Product product = Product(
+          id: productId,
+          title: productData['title'],
+          description: productData['description'],
+          price: productData['price'],
+          userEmail: productData['userEmail'],
+          userId: productData['userId'],
+        );
+        fetchedProductList.add(product);
       });
+      print(fetchedProductList);
+      _products = fetchedProductList;
+      notifyListeners();
+    });
   }
 
   void toggleProductFavoriteStatus() {
