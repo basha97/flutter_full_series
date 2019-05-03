@@ -3,9 +3,8 @@ import 'package:flutter_full_series/pages/auth.dart';
 import 'package:flutter_full_series/pages/product.dart';
 import 'package:flutter_full_series/pages/products.dart';
 import 'package:flutter_full_series/pages/products_admin.dart';
-import './models/product.dart';
 import 'package:scoped_model/scoped_model.dart';
-import './scoped-models/products.dart';
+import './scoped-models/main.dart';
 
 void main() => runApp(MyApp());
 
@@ -22,8 +21,8 @@ class _MyAppState extends State<MyApp>{
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModel<ProductsModel>(
-      model: ProductsModel(),
+    return ScopedModel<MainModel>(
+      model: MainModel(),
       child: MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

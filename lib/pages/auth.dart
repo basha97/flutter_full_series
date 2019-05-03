@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:scoped_model/scoped_model.dart';
+
+import '../scoped-models/main.dart';
+
 class AuthPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -9,9 +13,9 @@ class AuthPage extends StatefulWidget {
 
 class _AuthPageState extends State<AuthPage> {
   final Map<String, dynamic> _formdata = {
-    'email' : null,
-    'password' : null,
-    'acceptTerms' : false
+    'email': null,
+    'password': null,
+    'acceptTerms': false
   };
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
@@ -27,7 +31,7 @@ class _AuthPageState extends State<AuthPage> {
     return TextFormField(
       keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(labelText: 'Email', filled: true),
-      validator: (String value){
+      validator: (String value) {
         if (value.isEmpty) {
           return 'fields are empty';
         }
@@ -42,7 +46,7 @@ class _AuthPageState extends State<AuthPage> {
     return TextFormField(
       obscureText: true,
       decoration: InputDecoration(labelText: 'Password', filled: true),
-      validator: (String value){
+      validator: (String value) {
         if (value.isEmpty) {
           return 'fields are empty';
         }
@@ -65,17 +69,19 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
-  void _submitForm() {
+  void _submitForm(Function login) {
     if (!_formkey.currentState.validate() || !_formdata['acceptTerms']) {
-      return ;
+      return;
     }
+
     _formkey.currentState.save();
+    login(_formdata['email'],_formdata['password']);
     Navigator.pushReplacementNamed(context, '/products');
   }
 
   @override
   Widget build(BuildContext context) {
-    final double deviceWidth =  MediaQuery.of(context).size.width;
+    final double deviceWidth = MediaQuery.of(context).size.width;
     final double targetWidth = deviceWidth > 768.0 ? 500.0 : deviceWidth * 0.95;
     return Scaffold(
       appBar: AppBar(
@@ -90,7 +96,7 @@ class _AuthPageState extends State<AuthPage> {
               width: targetWidth,
               child: Form(
                 key: _formkey,
-                              child: Column(
+                child: Column(
                   children: <Widget>[
                     _buildEmailTextField(),
                     SizedBox(
@@ -101,11 +107,14 @@ class _AuthPageState extends State<AuthPage> {
                     SizedBox(
                       height: 10.0,
                     ),
-                    RaisedButton(
-                      
-                      textColor: Colors.white,
-                      child: Text('LOGIN'),
-                      onPressed: _submitForm,
+                    ScopedModelDescendant<MainModel>(
+                      builder: (BuildContext context, Widget child, MainModel model) {
+                        return RaisedButton(
+                          textColor: Colors.white,
+                          child: Text('LOGIN'),
+                          onPressed: () => _submitForm(model.login),
+                        );
+                      },
                     )
                   ],
                 ),
