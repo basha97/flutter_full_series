@@ -123,9 +123,9 @@ mixin ProductsModel on ConnectedProductsModel {
     });
   }
 
-  void fetchProducts() {
+  Future<Null> fetchProducts() {
     _isLoading = true;
-    http
+    return http
         .get('https://flutterseries.firebaseio.com/products.json')
         .then((http.Response response) {
       final List<Product> fetchedProductList = [];
