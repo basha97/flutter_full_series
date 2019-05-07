@@ -18,7 +18,8 @@ mixin ConnectedProductsModel on Model {
 
   Future<Null> addProduct(
       String title, String description, String image, double price) {
-        _isLoading = true;
+    _isLoading = true;
+    notifyListeners();
     final Map<String, dynamic> productData = {
       'title': title,
       'description': description,
@@ -75,18 +76,36 @@ mixin ProductsModel on ConnectedProductsModel {
     return _products[selectedProductIndex];
   }
 
-  void updateProduct(
+  Future<Null> updateProduct(
       String title, String description, String image, double price) {
-    final Product updatedProduct = Product(
-        title: title,
-        description: description,
-        image: image,
-        price: price,
-        userEmail: selectedProduct.userEmail,
-        userId: selectedProduct.userId);
-    _products[selectedProductIndex] = updatedProduct;
-    _selProductIndex = null;
-    notifyListeners();
+        _isLoading = true;
+        notifyListeners();
+    final Map<String, dynamic> updateData = {
+      'title': title,
+      'description': description,
+      'image':
+          'https://www.klondikebar.com/wp-content/uploads/sites/49/2015/09/double-chocolate-ice-cream-bar.png',
+      'price': price,
+      'userEmail': selectedProduct.userEmail,
+      'userId': selectedProduct.userId
+    };
+    return http.put(
+        'https://flutterseries.firebaseio.com/products/${selectedProduct.id}.json',
+        body: json.encode(updateData))
+        .then((http.Response response){
+          _isLoading = false;
+          final Product updatedProduct = Product(
+              id: selectedProduct.id,
+              title: title,
+              description: description,
+              image: image,
+              price: price,
+              userEmail: selectedProduct.userEmail,
+              userId: selectedProduct.userId);
+          _products[selectedProductIndex] = updatedProduct;
+          notifyListeners();
+        });
+    
   }
 
   void deleteProduct() {
@@ -100,18 +119,15 @@ mixin ProductsModel on ConnectedProductsModel {
     http
         .get('https://flutterseries.firebaseio.com/products.json')
         .then((http.Response response) {
-          
       final List<Product> fetchedProductList = [];
-      final Map<String,  dynamic> productListData =
-          json.decode(response.body);
-          print(productListData);
-          if (productListData == null) {
-            _isLoading = false;
-            notifyListeners();
-            return;
-          }
-      productListData
-          .forEach((String productId,dynamic productData) {
+      final Map<String, dynamic> productListData = json.decode(response.body);
+      print(productListData);
+      if (productListData == null) {
+        _isLoading = false;
+        notifyListeners();
+        return;
+      }
+      productListData.forEach((String productId, dynamic productData) {
         final Product product = Product(
           id: productId,
           title: productData['title'],
@@ -169,9 +185,8 @@ mixin UserModel on ConnectedProductsModel {
   }
 }
 
-
-mixin UtilityModel on ConnectedProductsModel{
-  bool get isLoading{
+mixin UtilityModel on ConnectedProductsModel {
+  bool get isLoading {
     return _isLoading;
   }
 }
