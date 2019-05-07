@@ -8,13 +8,15 @@ import 'package:http/http.dart' as http;
 
 import 'dart:convert';
 
+import 'dart:async';
+
 mixin ConnectedProductsModel on Model {
   List<Product> _products = [];
   User _authenticatedUser;
   int _selProductIndex;
   bool _isLoading = false;
 
-  void addProduct(
+  Future<Null> addProduct(
       String title, String description, String image, double price) {
         _isLoading = true;
     final Map<String, dynamic> productData = {
@@ -26,7 +28,7 @@ mixin ConnectedProductsModel on Model {
       'userEmail': _authenticatedUser.email,
       'userId': _authenticatedUser.id
     };
-    http
+    return http
         .post('https://flutterseries.firebaseio.com/products.json',
             body: json.encode(productData))
         .then((http.Response response) {
@@ -103,6 +105,11 @@ mixin ProductsModel on ConnectedProductsModel {
       final Map<String,  dynamic> productListData =
           json.decode(response.body);
           print(productListData);
+          if (productListData == null) {
+            _isLoading = false;
+            notifyListeners();
+            return;
+          }
       productListData
           .forEach((String productId,dynamic productData) {
         final Product product = Product(

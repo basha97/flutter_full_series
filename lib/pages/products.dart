@@ -23,7 +23,7 @@ Widget _buildProductsList(){
     if (model.displayedProduct.length > 0 && !model.isLoading) {
      content = Products(); 
     }else if(model.isLoading){
-      content = CircularProgressIndicator();
+      content = Center(child : CircularProgressIndicator());
     }
     return content;
   },);
