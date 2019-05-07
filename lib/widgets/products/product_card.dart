@@ -63,7 +63,8 @@ class ProductCard extends StatelessWidget {
     return Card(
       child: Column(
         children: <Widget>[
-          // Image.network(product.image),
+          // FadeInImage(image : NetworkImage(product.image),
+          // height: 300.0,fit: BoxFit.cover,placeholder: AssetImage('assets/bg.jpg'),),
           //  Image.network('https://www.klondikebar.com/wp-content/uploads/sites/49/2015/09/double-chocolate-ice-cream-bar.png'),
           _buildTitlePriceRow(),
           AddressTag('Union Square, San Francisco'),
