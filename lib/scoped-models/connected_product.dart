@@ -53,6 +53,11 @@ mixin ConnectedProductsModel on Model {
       _isLoading = false;
       notifyListeners();
       return true;
+    })
+    .catchError((error){
+      _isLoading = false;
+      notifyListeners();
+      return false;
     });
   }
 }
@@ -89,7 +94,7 @@ mixin ProductsModel on ConnectedProductsModel {
     });
   }
 
-  Future<Null> updateProduct(
+  Future<bool> updateProduct(
       String title, String description, String image, double price) {
     _isLoading = true;
     notifyListeners();
@@ -118,10 +123,16 @@ mixin ProductsModel on ConnectedProductsModel {
           userId: selectedProduct.userId);
       _products[selectedProductIndex] = updatedProduct;
       notifyListeners();
+      return true;
+    })
+    .catchError((error){
+      _isLoading = false;
+      notifyListeners();
+      return false;
     });
   }
 
-  void deleteProduct() {
+  Future<bool> deleteProduct() {
     _isLoading = true;
     final deletedProductId = selectedProduct.id;
     _products.removeAt(selectedProductIndex);
@@ -133,6 +144,12 @@ mixin ProductsModel on ConnectedProductsModel {
         .then((http.Response response) {
       _isLoading = false;
       notifyListeners();
+      return true;
+    })
+    .catchError((error){
+      _isLoading = false;
+      notifyListeners();
+      return false;
     });
   }
 
@@ -140,7 +157,7 @@ mixin ProductsModel on ConnectedProductsModel {
     _isLoading = true;
     return http
         .get('https://flutterseries.firebaseio.com/products.json')
-        .then((http.Response response) {
+        .then<Null>((http.Response response) {
       final List<Product> fetchedProductList = [];
       final Map<String, dynamic> productListData = json.decode(response.body);
       print(productListData);
@@ -165,6 +182,12 @@ mixin ProductsModel on ConnectedProductsModel {
       _isLoading = false;
       notifyListeners();
       _selProductId = null;
+      
+    })
+    .catchError((error){
+      _isLoading = false;
+      notifyListeners();
+      return false;
     });
   }
 
