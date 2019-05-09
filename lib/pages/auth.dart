@@ -26,6 +26,7 @@ class _AuthPageState extends State<AuthPage> {
 
   final TextEditingController _emailTextController = TextEditingController();
   final TextEditingController _passwordTextController = TextEditingController();
+  final TextEditingController _passwordConfirmTextController = TextEditingController();
 
   AuthMode _authMode = AuthMode.Login;
 
@@ -74,9 +75,11 @@ class _AuthPageState extends State<AuthPage> {
   Widget _buildConfirmPasswordTextField() {
     return TextFormField(
       obscureText: true,
+      controller: _passwordConfirmTextController,
       decoration: InputDecoration(labelText: 'Confirm Password', filled: true),
       validator: (String value) {
-        if (_passwordTextController != value) {
+        print(_passwordTextController);
+        if (_passwordTextController.text != value) {
           return 'Password doesn\'t match';
         }
       },
@@ -98,14 +101,21 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
-  void _submitForm(Function login) {
+  void _submitForm(Function login, Function signup) async{
     if (!_formkey.currentState.validate() || !_formdata['acceptTerms']) {
       return;
     }
-
     _formkey.currentState.save();
-    login(_formdata['email'],_formdata['password']);
-    Navigator.pushReplacementNamed(context, '/products');
+    if (_authMode == AuthMode.Login) {
+      login(_formdata['email'],_formdata['password']);
+    }else{
+      final Map<String , dynamic> successInformation = await signup(_formdata['email'],_formdata['password']);
+      if (successInformation['success']) {
+        Navigator.pushReplacementNamed(context, '/products');
+      }
+    }
+    
+    
   }
 
   @override
@@ -155,7 +165,7 @@ class _AuthPageState extends State<AuthPage> {
                         return RaisedButton(
                           textColor: Colors.white,
                           child: Text('LOGIN'),
-                          onPressed: () => _submitForm(model.login),
+                          onPressed: () => _submitForm(model.login,model.signup),
                         );
                       },
                     )
