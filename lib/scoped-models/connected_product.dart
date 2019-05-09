@@ -67,7 +67,7 @@ mixin ProductsModel on ConnectedProductsModel {
     };
     try {
       final http.Response response = await http.post(
-          'https://flutterseries.firebaseio.com/products.json',
+          'https://flutterseries.firebaseio.com/products.json?auth=${_authenticatedUser.token}',
           body: json.encode(productData));
 
       if (response.statusCode != 200 && response.statusCode != 201) {
@@ -111,7 +111,7 @@ mixin ProductsModel on ConnectedProductsModel {
     };
     return http
         .put(
-            'https://flutterseries.firebaseio.com/products/${selectedProduct.id}.json',
+            'https://flutterseries.firebaseio.com/products/${selectedProduct.id}.json?auth=${_authenticatedUser.token}',
             body: json.encode(updateData))
         .then((http.Response response) {
       _isLoading = false;
@@ -141,7 +141,7 @@ mixin ProductsModel on ConnectedProductsModel {
     notifyListeners();
     http
         .delete(
-            'https://flutterseries.firebaseio.com/products/${deletedProductId}.json')
+            'https://flutterseries.firebaseio.com/products/${deletedProductId}.json?auth=${_authenticatedUser.token}')
         .then((http.Response response) {
       _isLoading = false;
       notifyListeners();
@@ -156,7 +156,7 @@ mixin ProductsModel on ConnectedProductsModel {
   Future<Null> fetchProducts() {
     _isLoading = true;
     return http
-        .get('https://flutterseries.firebaseio.com/products.json')
+        .get('https://flutterseries.firebaseio.com/products.json?auth=${_authenticatedUser.token}')
         .then<Null>((http.Response response) {
       final List<Product> fetchedProductList = [];
       final Map<String, dynamic> productListData = json.decode(response.body);
@@ -256,6 +256,7 @@ mixin UserModel on ConnectedProductsModel {
     if (responseData.containsKey('idToken')) {
       hasError = false;
       message = 'Authenticated success';
+      _authenticatedUser = User(id: responseData['localId'],email: email,token: responseData['idToken']);
     } else if (responseData['error']['message'] == ['EMAIL_NOT_FOUND']) {
       message = 'Email not found';
     } else if (responseData['error']['message'] == ['INVALID_PASSWORD']) {
