@@ -12,6 +12,8 @@ import 'dart:async';
 
 import '../models/auth.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 mixin ConnectedProductsModel on Model {
   List<Product> _products = [];
   User _authenticatedUser;
@@ -156,7 +158,8 @@ mixin ProductsModel on ConnectedProductsModel {
   Future<Null> fetchProducts() {
     _isLoading = true;
     return http
-        .get('https://flutterseries.firebaseio.com/products.json?auth=${_authenticatedUser.token}')
+        .get(
+            'https://flutterseries.firebaseio.com/products.json?auth=${_authenticatedUser.token}')
         .then<Null>((http.Response response) {
       final List<Product> fetchedProductList = [];
       final Map<String, dynamic> productListData = json.decode(response.body);
@@ -224,7 +227,8 @@ mixin ProductsModel on ConnectedProductsModel {
 }
 
 mixin UserModel on ConnectedProductsModel {
-  Future<Map<String, dynamic>> authenticate(String email, String password,[AuthMode mode = AuthMode.Login]) async {
+  Future<Map<String, dynamic>> authenticate(String email, String password,
+      [AuthMode mode = AuthMode.Login]) async {
     _isLoading = true;
     notifyListeners();
     final Map<String, dynamic> authData = {
@@ -232,31 +236,34 @@ mixin UserModel on ConnectedProductsModel {
       'password': password,
       'returnSecureToken': true
     };
-    
+
     http.Response response;
 
     if (mode == AuthMode.Login) {
       response = await http.post(
-        'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyB6apE4dvUnbMhO2G5YAZX91njyuYdlM98',
-        body: json.encode(authData),
-        headers: {'content-Type': 'application/json'});
-    }else{
+          'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyB6apE4dvUnbMhO2G5YAZX91njyuYdlM98',
+          body: json.encode(authData),
+          headers: {'content-Type': 'application/json'});
+    } else {
       response = await http.post(
-        'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyB6apE4dvUnbMhO2G5YAZX91njyuYdlM98',
-        body: json.encode(authData),
-        headers: {'content-Type': 'application/json'});
+          'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyB6apE4dvUnbMhO2G5YAZX91njyuYdlM98',
+          body: json.encode(authData),
+          headers: {'content-Type': 'application/json'});
     }
-
-     
 
     final Map<String, dynamic> responseData = json.decode(response.body);
     bool hasError = true;
-    String message ;
+    String message;
     print(responseData);
     if (responseData.containsKey('idToken')) {
       hasError = false;
       message = 'Authenticated success';
-      _authenticatedUser = User(id: responseData['localId'],email: email,token: responseData['idToken']);
+      _authenticatedUser = User(
+          id: responseData['localId'],
+          email: email,
+          token: responseData['idToken']);
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('token', responseData['idToken']);
     } else if (responseData['error']['message'] == ['EMAIL_NOT_FOUND']) {
       message = 'Email not found';
     } else if (responseData['error']['message'] == ['INVALID_PASSWORD']) {
@@ -270,7 +277,10 @@ mixin UserModel on ConnectedProductsModel {
     return {'success': !hasError, 'Message': 'Authentication succeded'};
   }
 
-  
+  void autoAuthenticate() async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String token = prefs.getString('token'); 
+  }
 }
 
 mixin UtilityModel on ConnectedProductsModel {
