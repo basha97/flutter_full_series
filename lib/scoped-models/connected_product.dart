@@ -236,9 +236,18 @@ mixin UserModel on ConnectedProductsModel {
         'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyB6apE4dvUnbMhO2G5YAZX91njyuYdlM98',
         body: json.encode(authData),
         headers: {'content-Type': 'application/json'});
+    final Map<String , dynamic> responseData = json.decode(response.body);
+    bool hasError = true;
+    String message = 'Something went wrong';
+    if (responseData.containsKey('idToken')) {
+      hasError = false;
+       message = 'Authenticated success';
+    }else if (responseData['error']['message'] == ['EMAIL_EXISTS']) {
+      message = 'Email already exists';
+    }
 
-    print(response);
-    return {'success' : true , 'Message' : 'Authentication succeded'};    
+    print(json.decode(response.body));
+    return {'success' : !hasError , 'Message' : 'Authentication succeded'};    
   }
 }
 

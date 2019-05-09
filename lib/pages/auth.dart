@@ -4,10 +4,7 @@ import 'package:scoped_model/scoped_model.dart';
 
 import '../scoped-models/main.dart';
 
-enum AuthMode {
-  Login,
-  Signup
-}
+enum AuthMode { Login, Signup }
 
 class AuthPage extends StatefulWidget {
   @override
@@ -26,7 +23,8 @@ class _AuthPageState extends State<AuthPage> {
 
   final TextEditingController _emailTextController = TextEditingController();
   final TextEditingController _passwordTextController = TextEditingController();
-  final TextEditingController _passwordConfirmTextController = TextEditingController();
+  final TextEditingController _passwordConfirmTextController =
+      TextEditingController();
 
   AuthMode _authMode = AuthMode.Login;
 
@@ -53,8 +51,6 @@ class _AuthPageState extends State<AuthPage> {
       },
     );
   }
-
-  
 
   Widget _buildPasswordTextField() {
     return TextFormField(
@@ -101,21 +97,35 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
-  void _submitForm(Function login, Function signup) async{
+  void _submitForm(Function login, Function signup) async {
     if (!_formkey.currentState.validate() || !_formdata['acceptTerms']) {
       return;
     }
     _formkey.currentState.save();
     if (_authMode == AuthMode.Login) {
-      login(_formdata['email'],_formdata['password']);
-    }else{
-      final Map<String , dynamic> successInformation = await signup(_formdata['email'],_formdata['password']);
+      login(_formdata['email'], _formdata['password']);
+    } else {
+      final Map<String, dynamic> successInformation =
+          await signup(_formdata['email'], _formdata['password']);
       if (successInformation['success']) {
         Navigator.pushReplacementNamed(context, '/products');
+      } else {
+        showDialog(context: context,builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('An error occured'),
+            //content: Text(successInformation['message']),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Okay'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
       }
     }
-    
-    
   }
 
   @override
@@ -145,27 +155,32 @@ class _AuthPageState extends State<AuthPage> {
                     SizedBox(
                       height: 10.0,
                     ),
-                    _authMode == AuthMode.Signup ? _buildConfirmPasswordTextField() : Container(),
+                    _authMode == AuthMode.Signup
+                        ? _buildConfirmPasswordTextField()
+                        : Container(),
                     _buildSwitchTile(),
                     SizedBox(
                       height: 10.0,
                     ),
                     FlatButton(
-                      child: Text('Switch to ${_authMode == AuthMode.Login ? 'SignUp' : 'Login'}'),
-                      onPressed: (){
+                      child: Text(
+                          'Switch to ${_authMode == AuthMode.Login ? 'SignUp' : 'Login'}'),
+                      onPressed: () {
                         setState(() {
-                          _authMode = _authMode == AuthMode.Login 
-                            ? AuthMode.Signup
-                            : AuthMode.Login ;
+                          _authMode = _authMode == AuthMode.Login
+                              ? AuthMode.Signup
+                              : AuthMode.Login;
                         });
                       },
                     ),
                     ScopedModelDescendant<MainModel>(
-                      builder: (BuildContext context, Widget child, MainModel model) {
+                      builder: (BuildContext context, Widget child,
+                          MainModel model) {
                         return RaisedButton(
                           textColor: Colors.white,
                           child: Text('LOGIN'),
-                          onPressed: () => _submitForm(model.login,model.signup),
+                          onPressed: () =>
+                              _submitForm(model.login, model.signup),
                         );
                       },
                     )
