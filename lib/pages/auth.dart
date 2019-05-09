@@ -102,11 +102,14 @@ class _AuthPageState extends State<AuthPage> {
       return;
     }
     _formkey.currentState.save();
+    Map<String, dynamic> successInformation;
     if (_authMode == AuthMode.Login) {
-      login(_formdata['email'], _formdata['password']);
+       successInformation = 
+          await login(_formdata['email'], _formdata['password']);
     } else {
-      final Map<String, dynamic> successInformation =
+       successInformation =
           await signup(_formdata['email'], _formdata['password']);
+    }
       if (successInformation['success']) {
         Navigator.pushReplacementNamed(context, '/products');
       } else {
@@ -126,7 +129,7 @@ class _AuthPageState extends State<AuthPage> {
                 ],
               );
             });
-      }
+      
     }
   }
 

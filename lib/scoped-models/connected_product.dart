@@ -222,11 +222,38 @@ mixin ProductsModel on ConnectedProductsModel {
 }
 
 mixin UserModel on ConnectedProductsModel {
-  void login(String email, String password) {
-    _authenticatedUser = User(id: 'sad', email: email, password: password);
+  Future<Map<String, dynamic>> login(String email, String password) async {
+    _isLoading = true;
+    notifyListeners();
+    final Map<String, dynamic> authData = {
+      'email': email,
+      'password': password,
+      'returnSecureToken': true
+    };
+    final http.Response response = await http.post(
+        'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyB6apE4dvUnbMhO2G5YAZX91njyuYdlM98',
+        body: json.encode(authData),
+        headers: {'content-Type': 'application/json'});
+
+    final Map<String, dynamic> responseData = json.decode(response.body);
+    bool hasError = true;
+    String message ;
+    print(responseData);
+    if (responseData.containsKey('idToken')) {
+      hasError = false;
+      message = 'Authenticated success';
+    } else if (responseData['error']['message'] == ['EMAIL_NOT_FOUND']) {
+      message = 'Email not found';
+    } else if (responseData['error']['message'] == ['INVALID_PASSWORD']) {
+      message = 'Wrong password';
+    }
+    _isLoading = false;
+    notifyListeners();
+    print(json.decode(response.body));
+    return {'success': !hasError, 'Message': 'Authentication succeded'};
   }
 
-  Future<Map<String, dynamic>> signup(String email, String password) async{
+  Future<Map<String, dynamic>> signup(String email, String password) async {
     _isLoading = true;
     notifyListeners();
     final Map<String, dynamic> authData = {
@@ -238,19 +265,19 @@ mixin UserModel on ConnectedProductsModel {
         'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyB6apE4dvUnbMhO2G5YAZX91njyuYdlM98',
         body: json.encode(authData),
         headers: {'content-Type': 'application/json'});
-    final Map<String , dynamic> responseData = json.decode(response.body);
+    final Map<String, dynamic> responseData = json.decode(response.body);
     bool hasError = true;
     String message = 'Something went wrong';
     if (responseData.containsKey('idToken')) {
       hasError = false;
-       message = 'Authenticated success';
-    }else if (responseData['error']['message'] == ['EMAIL_EXISTS']) {
+      message = 'Authenticated success';
+    } else if (responseData['error']['message'] == ['EMAIL_EXISTS']) {
       message = 'Email already exists';
     }
     _isLoading = false;
     notifyListeners();
     print(json.decode(response.body));
-    return {'success' : !hasError , 'Message' : 'Authentication succeded'};    
+    return {'success': !hasError, 'Message': 'Authentication succeded'};
   }
 }
 
