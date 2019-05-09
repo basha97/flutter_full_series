@@ -10,6 +10,8 @@ import 'dart:convert';
 
 import 'dart:async';
 
+import '../models/auth.dart';
+
 mixin ConnectedProductsModel on Model {
   List<Product> _products = [];
   User _authenticatedUser;
@@ -222,7 +224,7 @@ mixin ProductsModel on ConnectedProductsModel {
 }
 
 mixin UserModel on ConnectedProductsModel {
-  Future<Map<String, dynamic>> login(String email, String password) async {
+  Future<Map<String, dynamic>> authenticate(String email, String password,[AuthMode mode = AuthMode.Login]) async {
     _isLoading = true;
     notifyListeners();
     final Map<String, dynamic> authData = {
@@ -230,10 +232,22 @@ mixin UserModel on ConnectedProductsModel {
       'password': password,
       'returnSecureToken': true
     };
-    final http.Response response = await http.post(
+    
+    http.Response response;
+
+    if (mode == AuthMode.Login) {
+      response = await http.post(
         'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyB6apE4dvUnbMhO2G5YAZX91njyuYdlM98',
         body: json.encode(authData),
         headers: {'content-Type': 'application/json'});
+    }else{
+      response = await http.post(
+        'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyB6apE4dvUnbMhO2G5YAZX91njyuYdlM98',
+        body: json.encode(authData),
+        headers: {'content-Type': 'application/json'});
+    }
+
+     
 
     final Map<String, dynamic> responseData = json.decode(response.body);
     bool hasError = true;
@@ -246,31 +260,6 @@ mixin UserModel on ConnectedProductsModel {
       message = 'Email not found';
     } else if (responseData['error']['message'] == ['INVALID_PASSWORD']) {
       message = 'Wrong password';
-    }
-    _isLoading = false;
-    notifyListeners();
-    print(json.decode(response.body));
-    return {'success': !hasError, 'Message': 'Authentication succeded'};
-  }
-
-  Future<Map<String, dynamic>> signup(String email, String password) async {
-    _isLoading = true;
-    notifyListeners();
-    final Map<String, dynamic> authData = {
-      'email': email,
-      'password': password,
-      'returnSecureToken': true
-    };
-    final http.Response response = await http.post(
-        'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyB6apE4dvUnbMhO2G5YAZX91njyuYdlM98',
-        body: json.encode(authData),
-        headers: {'content-Type': 'application/json'});
-    final Map<String, dynamic> responseData = json.decode(response.body);
-    bool hasError = true;
-    String message = 'Something went wrong';
-    if (responseData.containsKey('idToken')) {
-      hasError = false;
-      message = 'Authenticated success';
     } else if (responseData['error']['message'] == ['EMAIL_EXISTS']) {
       message = 'Email already exists';
     }
@@ -279,6 +268,8 @@ mixin UserModel on ConnectedProductsModel {
     print(json.decode(response.body));
     return {'success': !hasError, 'Message': 'Authentication succeded'};
   }
+
+  
 }
 
 mixin UtilityModel on ConnectedProductsModel {
