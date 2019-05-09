@@ -15,6 +15,40 @@ mixin ConnectedProductsModel on Model {
   User _authenticatedUser;
   String _selProductId;
   bool _isLoading = false;
+}
+
+mixin ProductsModel on ConnectedProductsModel {
+  bool _showFavorites = false;
+
+  List<Product> get allProducts {
+    return List.from(_products);
+  }
+
+  List<Product> get displayedProduct {
+    if (_showFavorites) {
+      return _products.where((Product product) => product.isFavourite).toList();
+    }
+    return List.from(_products);
+  }
+
+  int get selectedProductIndex {
+    _products.indexWhere((Product product) {
+      return product.id == _selProductId;
+    });
+  }
+
+  String get selectedProductId {
+    return _selProductId;
+  }
+
+  Product get selectedProduct {
+    if (selectedProductId == null) {
+      return null;
+    }
+    return _products.firstWhere((Product product) {
+      return product.id == _selProductId;
+    });
+  }
 
   Future<bool> addProduct(
       String title, String description, String image, double price) async {
@@ -58,40 +92,6 @@ mixin ConnectedProductsModel on Model {
       _isLoading = false;
       notifyListeners();
     }
-  }
-}
-
-mixin ProductsModel on ConnectedProductsModel {
-  bool _showFavorites = false;
-
-  List<Product> get allProducts {
-    return List.from(_products);
-  }
-
-  List<Product> get displayedProduct {
-    if (_showFavorites) {
-      return _products.where((Product product) => product.isFavourite).toList();
-    }
-    return List.from(_products);
-  }
-
-  int get selectedProductIndex {
-    _products.indexWhere((Product product) {
-      return product.id == _selProductId;
-    });
-  }
-
-  String get selectedProductId {
-    return _selProductId;
-  }
-
-  Product get selectedProduct {
-    if (selectedProductId == null) {
-      return null;
-    }
-    return _products.firstWhere((Product product) {
-      return product.id == _selProductId;
-    });
   }
 
   Future<bool> updateProduct(
