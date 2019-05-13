@@ -194,7 +194,7 @@ mixin ProductsModel on ConnectedProductsModel {
     });
   }
 
-  void toggleProductFavoriteStatus() {
+  void toggleProductFavoriteStatus() async{
     final bool isCurrentlyFavorite = selectedProduct.isFavourite;
     final bool newFavoriteStatus = !isCurrentlyFavorite;
     final Product updateProduct = Product(
@@ -208,8 +208,34 @@ mixin ProductsModel on ConnectedProductsModel {
       userId: selectedProduct.userId,
     );
     _products[selectedProductIndex] = updateProduct;
-    _selProductId = null;
     notifyListeners();
+
+    http.Response response;
+
+    if (newFavoriteStatus) {
+      response = await http.put(
+          'https://flutterseries.firebaseio.com/products/${selectedProduct.id}/wishlistUsers/${_authenticatedUser.id}.json?auth=${_authenticatedUser.token}',
+          body: json.encode(true));
+    }else{
+      response = await http.delete(
+          'https://flutterseries.firebaseio.com/products/${selectedProduct.id}/wishlistUsers/${_authenticatedUser.id}.json?auth=${_authenticatedUser.token}'
+         );
+    }
+    if (response.statusCode != 200 && response.statusCode != 201) {
+            final Product updateProduct = Product(
+              id: selectedProduct.id,
+              title: selectedProduct.title,
+              description: selectedProduct.description,
+              image: selectedProduct.image,
+              price: selectedProduct.price,
+              isFavourite: !newFavoriteStatus,
+              userEmail: selectedProduct.userEmail,
+              userId: selectedProduct.userId,
+            );
+            _products[selectedProductIndex] = updateProduct;
+            notifyListeners();
+          }
+    
   }
 
   void selectProduct(String productId) {
@@ -233,7 +259,7 @@ mixin UserModel on ConnectedProductsModel {
 
   PublishSubject<bool> _userSubject = PublishSubject();
 
-  PublishSubject<bool> get userSubject{
+  PublishSubject<bool> get userSubject {
     return _userSubject;
   }
 
@@ -313,7 +339,7 @@ mixin UserModel on ConnectedProductsModel {
       }
       final String userEmail = prefs.getString('userEmail');
       final String userId = prefs.getString('userId');
-      final int  tokenLifeSpan = parsedExpiryTime.difference(now).inSeconds;
+      final int tokenLifeSpan = parsedExpiryTime.difference(now).inSeconds;
       _authenticatedUser = User(id: userId, email: userEmail, token: token);
       _userSubject.add(true);
       setAuthTimeout(tokenLifeSpan);
