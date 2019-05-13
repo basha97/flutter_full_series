@@ -173,13 +173,16 @@ mixin ProductsModel on ConnectedProductsModel {
       }
       productListData.forEach((String productId, dynamic productData) {
         final Product product = Product(
-          id: productId,
-          title: productData['title'],
-          description: productData['description'],
-          price: productData['price'],
-          userEmail: productData['userEmail'],
-          userId: productData['userId'],
-        );
+            id: productId,
+            title: productData['title'],
+            description: productData['description'],
+            price: productData['price'],
+            userEmail: productData['userEmail'],
+            userId: productData['userId'],
+            isFavourite: productData['wishlistUsers'] == null
+                ? false
+                : (productData['wishlistUsers'] as Map<String, dynamic>)
+                    .containsKey(_authenticatedUser.id));
         fetchedProductList.add(product);
       });
       print(fetchedProductList);
@@ -194,7 +197,7 @@ mixin ProductsModel on ConnectedProductsModel {
     });
   }
 
-  void toggleProductFavoriteStatus() async{
+  void toggleProductFavoriteStatus() async {
     final bool isCurrentlyFavorite = selectedProduct.isFavourite;
     final bool newFavoriteStatus = !isCurrentlyFavorite;
     final Product updateProduct = Product(
@@ -216,26 +219,24 @@ mixin ProductsModel on ConnectedProductsModel {
       response = await http.put(
           'https://flutterseries.firebaseio.com/products/${selectedProduct.id}/wishlistUsers/${_authenticatedUser.id}.json?auth=${_authenticatedUser.token}',
           body: json.encode(true));
-    }else{
+    } else {
       response = await http.delete(
-          'https://flutterseries.firebaseio.com/products/${selectedProduct.id}/wishlistUsers/${_authenticatedUser.id}.json?auth=${_authenticatedUser.token}'
-         );
+          'https://flutterseries.firebaseio.com/products/${selectedProduct.id}/wishlistUsers/${_authenticatedUser.id}.json?auth=${_authenticatedUser.token}');
     }
     if (response.statusCode != 200 && response.statusCode != 201) {
-            final Product updateProduct = Product(
-              id: selectedProduct.id,
-              title: selectedProduct.title,
-              description: selectedProduct.description,
-              image: selectedProduct.image,
-              price: selectedProduct.price,
-              isFavourite: !newFavoriteStatus,
-              userEmail: selectedProduct.userEmail,
-              userId: selectedProduct.userId,
-            );
-            _products[selectedProductIndex] = updateProduct;
-            notifyListeners();
-          }
-    
+      final Product updateProduct = Product(
+        id: selectedProduct.id,
+        title: selectedProduct.title,
+        description: selectedProduct.description,
+        image: selectedProduct.image,
+        price: selectedProduct.price,
+        isFavourite: !newFavoriteStatus,
+        userEmail: selectedProduct.userEmail,
+        userId: selectedProduct.userId,
+      );
+      _products[selectedProductIndex] = updateProduct;
+      notifyListeners();
+    }
   }
 
   void selectProduct(String productId) {
