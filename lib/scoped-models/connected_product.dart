@@ -157,7 +157,7 @@ mixin ProductsModel on ConnectedProductsModel {
     });
   }
 
-  Future<Null> fetchProducts() {
+  Future<Null> fetchProducts({onlyForUser = false}) {
     _isLoading = true;
     return http
         .get(
@@ -186,7 +186,9 @@ mixin ProductsModel on ConnectedProductsModel {
         fetchedProductList.add(product);
       });
       print(fetchedProductList);
-      _products = fetchedProductList;
+      _products = onlyForUser ? fetchedProductList.where((Product product){
+        return product.userId == _authenticatedUser.id;
+      }).toList() : fetchedProductList;
       _isLoading = false;
       notifyListeners();
       _selProductId = null;
@@ -241,7 +243,6 @@ mixin ProductsModel on ConnectedProductsModel {
 
   void selectProduct(String productId) {
     _selProductId = productId;
-
     notifyListeners();
   }
 
