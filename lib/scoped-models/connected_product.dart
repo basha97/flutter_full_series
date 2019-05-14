@@ -107,7 +107,7 @@ mixin ProductsModel on ConnectedProductsModel {
   }
 
   Future<bool> updateProduct(
-      String title, String description, String image, double price) {
+      String title, String description, String image, double price, LocationData locData) {
     _isLoading = true;
     notifyListeners();
     final Map<String, dynamic> updateData = {
@@ -131,6 +131,7 @@ mixin ProductsModel on ConnectedProductsModel {
           description: description,
           image: image,
           price: price,
+          location:  locData,
           userEmail: selectedProduct.userEmail,
           userId: selectedProduct.userId);
       _products[selectedProductIndex] = updatedProduct;
@@ -220,6 +221,7 @@ mixin ProductsModel on ConnectedProductsModel {
       description: selectedProduct.description,
       image: selectedProduct.image,
       price: selectedProduct.price,
+      location: selectedProduct.location,
       isFavourite: newFavoriteStatus,
       userEmail: selectedProduct.userEmail,
       userId: selectedProduct.userId,
@@ -244,6 +246,7 @@ mixin ProductsModel on ConnectedProductsModel {
         description: selectedProduct.description,
         image: selectedProduct.image,
         price: selectedProduct.price,
+        location: selectedProduct.location,
         isFavourite: !newFavoriteStatus,
         userEmail: selectedProduct.userEmail,
         userId: selectedProduct.userId,
