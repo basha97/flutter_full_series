@@ -1,6 +1,6 @@
 import 'package:map_view/map_view.dart';
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
 import '../helpers/ensure-visible.dart';
 
 class LocationInput extends StatefulWidget {
@@ -13,11 +13,11 @@ class LocationInput extends StatefulWidget {
 class _LocationInputState extends State<LocationInput> {
   final FocusNode _addressInputFocusNode = FocusNode();
   Uri _staticMapUri;
+  final TextEditingController _addressInputController = TextEditingController();
 
   @override
   void initState() {
     _addressInputFocusNode.addListener(_updateLocation);
-    getStaticMap();
     super.initState();
   }
 
@@ -27,7 +27,13 @@ class _LocationInputState extends State<LocationInput> {
     super.dispose();
   }
 
-  void getStaticMap()  {
+  void getStaticMap(String address)  async{
+    if (address.isEmpty) {
+      return ;
+    }
+    final Uri uri =  Uri.https('map.googleapis.com', '/maps/api/geocode/json',{'address': address , 'key': 'AIzaSyBn2HSp4Xg9_VKud0m3RfGtDKSUSq4wBMg'});
+    final http.Response response = await http.get(uri);
+
     final StaticMapProvider staticMapViewProvider =
         StaticMapProvider('AIzaSyBn2HSp4Xg9_VKud0m3RfGtDKSUSq4wBMg');
     final Uri staticMapUri = staticMapViewProvider.getStaticUriWithMarkers(
@@ -41,7 +47,11 @@ class _LocationInputState extends State<LocationInput> {
     });
   }
 
-  void _updateLocation() {}
+  void _updateLocation() {
+    if (!_addressInputFocusNode.hasFocus) {
+      getStaticMap(_addressInputController.text);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +61,8 @@ class _LocationInputState extends State<LocationInput> {
           focusNode: _addressInputFocusNode,
           child: TextField(
             focusNode: _addressInputFocusNode,
+            controller: _addressInputController,
+            decoration: InputDecoration(labelText: 'Address'),
           ),
         ),
         SizedBox(
