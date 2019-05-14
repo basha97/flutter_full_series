@@ -58,8 +58,8 @@ mixin ProductsModel on ConnectedProductsModel {
     });
   }
 
-  Future<bool> addProduct(
-      String title, String description, String image, double price,LocationData locData) async {
+  Future<bool> addProduct(String title, String description, String image,
+      double price, LocationData locData) async {
     _isLoading = true;
     notifyListeners();
     final Map<String, dynamic> productData = {
@@ -70,9 +70,9 @@ mixin ProductsModel on ConnectedProductsModel {
       'price': price,
       'userEmail': _authenticatedUser.email,
       'userId': _authenticatedUser.id,
-      'loc_lat':locData.latitude,
-      'loc_lng':locData.longitude,
-      'loc_address':locData.address
+      'loc_lat': locData.latitude,
+      'loc_lng': locData.longitude,
+      'loc_address': locData.address
     };
     try {
       final http.Response response = await http.post(
@@ -92,6 +92,7 @@ mixin ProductsModel on ConnectedProductsModel {
           description: description,
           image: image,
           price: price,
+          location: locData,
           userEmail: _authenticatedUser.email,
           userId: _authenticatedUser.id);
       _products.add(newProduct);
@@ -184,6 +185,10 @@ mixin ProductsModel on ConnectedProductsModel {
             price: productData['price'],
             userEmail: productData['userEmail'],
             userId: productData['userId'],
+            location: LocationData(
+                address: productData['loc_address'],
+                latitude: productData['loc_lat'],
+                longitude: productData['loc_lng']),
             isFavourite: productData['wishlistUsers'] == null
                 ? false
                 : (productData['wishlistUsers'] as Map<String, dynamic>)
@@ -191,9 +196,11 @@ mixin ProductsModel on ConnectedProductsModel {
         fetchedProductList.add(product);
       });
       print(fetchedProductList);
-      _products = onlyForUser ? fetchedProductList.where((Product product){
-        return product.userId == _authenticatedUser.id;
-      }).toList() : fetchedProductList;
+      _products = onlyForUser
+          ? fetchedProductList.where((Product product) {
+              return product.userId == _authenticatedUser.id;
+            }).toList()
+          : fetchedProductList;
       _isLoading = false;
       notifyListeners();
       _selProductId = null;

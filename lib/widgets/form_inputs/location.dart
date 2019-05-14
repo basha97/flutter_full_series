@@ -4,10 +4,12 @@ import 'package:http/http.dart' as http;
 import '../helpers/ensure-visible.dart';
 import 'dart:convert';
 import '../../models/location_data.dart';
+import '../../models/product.dart';
 
 class LocationInput extends StatefulWidget {
   final Function setLocation;
-  LocationInput(this.setLocation);
+  final Product product;
+  LocationInput(this.setLocation,this.product);
   @override
   State<StatefulWidget> createState() {
     return _LocationInputState();
@@ -23,6 +25,9 @@ class _LocationInputState extends State<LocationInput> {
   @override
   void initState() {
     _addressInputFocusNode.addListener(_updateLocation);
+    if (widget.product != null) {
+      getStaticMap(widget.product.location.address);
+    }
     super.initState();
   }
 
@@ -40,18 +45,22 @@ class _LocationInputState extends State<LocationInput> {
       widget.setLocation(null);
       return;
     }
-    final Uri uri = Uri.https('maps.googleapis.com', '/maps/api/geocode/json',
+    if (widget.product == null ) {
+      final Uri uri = Uri.https('maps.googleapis.com', '/maps/api/geocode/json',
         {'address': address, 'key': 'AIzaSyBn2HSp4Xg9_VKud0m3RfGtDKSUSq4wBMg'});
-    final http.Response response = await http.get(uri);
-    final decodedResponse = json.decode(response.body);
-    final formattedAddress = decodedResponse['results'][0]['formatted_address'];
-    final coords = decodedResponse['results'][0]['geometry']['location'];
+      final http.Response response = await http.get(uri);
+      final decodedResponse = json.decode(response.body);
+      final formattedAddress = decodedResponse['results'][0]['formatted_address'];
+      final coords = decodedResponse['results'][0]['geometry']['location'];
 
-    _locationData = LocationData(
-      address: formattedAddress,
-      latitude: coords['lat'],
-      longitude: coords['lng']
-    );
+      _locationData = LocationData(
+        address: formattedAddress,
+        latitude: coords['lat'],
+        longitude: coords['lng']
+      );
+    }else{
+      _locationData = widget.product.location; 
+    }
 
     final StaticMapProvider staticMapViewProvider =
         StaticMapProvider('AIzaSyBn2HSp4Xg9_VKud0m3RfGtDKSUSq4wBMg');
