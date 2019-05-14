@@ -6,6 +6,8 @@ import 'dart:convert';
 import '../../models/location_data.dart';
 
 class LocationInput extends StatefulWidget {
+  final Function setLocation;
+  LocationInput(this.setLocation);
   @override
   State<StatefulWidget> createState() {
     return _LocationInputState();
@@ -35,6 +37,8 @@ class _LocationInputState extends State<LocationInput> {
       setState(() {
        _staticMapUri = null; 
       });
+      widget.setLocation(null);
+      return;
     }
     final Uri uri = Uri.https('maps.googleapis.com', '/maps/api/geocode/json',
         {'address': address, 'key': 'AIzaSyBn2HSp4Xg9_VKud0m3RfGtDKSUSq4wBMg'});
@@ -57,6 +61,7 @@ class _LocationInputState extends State<LocationInput> {
         width: 500,
         height: 300,
         maptype: StaticMapViewType.roadmap);
+    widget.setLocation(_locationData);  
     setState(() {
       _addressInputController.text = _locationData.address;
       _staticMapUri = staticMapUri;
