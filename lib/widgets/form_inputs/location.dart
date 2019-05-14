@@ -2,6 +2,7 @@ import 'package:map_view/map_view.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../helpers/ensure-visible.dart';
+import 'dart:convert';
 
 class LocationInput extends StatefulWidget {
   @override
@@ -27,23 +28,29 @@ class _LocationInputState extends State<LocationInput> {
     super.dispose();
   }
 
-  void getStaticMap(String address)  async{
+  void getStaticMap(String address) async {
     if (address.isEmpty) {
-      return ;
+      return;
     }
-    final Uri uri =  Uri.https('map.googleapis.com', '/maps/api/geocode/json',{'address': address , 'key': 'AIzaSyBn2HSp4Xg9_VKud0m3RfGtDKSUSq4wBMg'});
+    final Uri uri = Uri.https('maps.googleapis.com', '/maps/api/geocode/json',
+        {'address': address, 'key': 'AIzaSyBn2HSp4Xg9_VKud0m3RfGtDKSUSq4wBMg'});
     final http.Response response = await http.get(uri);
+    final decodedResponse = json.decode(response.body);
+    final formattedAddress = decodedResponse['results'][0]['formatted_address'];
+    final coords = decodedResponse['results'][0]['geometry']['location'];
+
 
     final StaticMapProvider staticMapViewProvider =
         StaticMapProvider('AIzaSyBn2HSp4Xg9_VKud0m3RfGtDKSUSq4wBMg');
     final Uri staticMapUri = staticMapViewProvider.getStaticUriWithMarkers(
-        [Marker('position', 'position', 41.40338, 2.17403)],
-        center: Location(41.40338, 2.17403),
+        [Marker('position', 'position', coords['lat'], coords['lng'])],
+        center: Location(coords['lat'], coords['lng']),
         width: 500,
         height: 300,
         maptype: StaticMapViewType.roadmap);
     setState(() {
-     _staticMapUri =  staticMapUri;
+      _addressInputController.text = formattedAddress;
+      _staticMapUri = staticMapUri;
     });
   }
 
