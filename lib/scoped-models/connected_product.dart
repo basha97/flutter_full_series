@@ -116,6 +116,9 @@ mixin ProductsModel on ConnectedProductsModel {
       'image':
           'https://www.klondikebar.com/wp-content/uploads/sites/49/2015/09/double-chocolate-ice-cream-bar.png',
       'price': price,
+      'loc_lat': locData.latitude,
+      'loc_lng': locData.longitude,
+      'loc_address': locData.address,
       'userEmail': selectedProduct.userEmail,
       'userId': selectedProduct.userId
     };
